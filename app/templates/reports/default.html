@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - {{ generated_at.strftime('%Y-%m-%d %H:%M:%S') }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        .metadata {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        .alert.high { border-left-color: #e74c3c; }
+        .alert.medium { border-left-color: #f39c12; }
+        .alert.low { border-left-color: #3498db; }
+        .alert.info { border-left-color: #2ecc71; }
+        .chart-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .severity-high { color: #e74c3c; font-weight: bold; }
+        .severity-medium { color: #f39c12; font-weight: bold; }
+        .severity-low { color: #3498db; }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #95a5a6;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ title }}</h1>
+        <div class="subtitle">{{ description }}</div>
+    </div>
+    
+    <div class="metadata">
+        <div>Generated: {{ generated_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</div>
+        <div>Report Period: {{ start_date.strftime('%Y-%m-%d') }} to {{ end_date.strftime('%Y-%m-%d') }}</div>
+    </div>
+    
+    {% if alert_chart %}
+    <div class="section">
+        <h2>Alert Summary</h2>
+        <div class="chart-container">
+            <img src="data:image/png;base64,{{ alert_chart }}" alt="Alert Distribution">
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if data.alerts %}
+    <div class="section">
+        <h2>Recent Alerts</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Severity</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alert in data.alerts %}
+                <tr>
+                    <td>{{ alert.get('timestamp', 'N/A') }}</td>
+                    <td class="severity-{{ alert.severity|lower }}">
+                        {{ alert.severity }}
+                    </td>
+                    <td>{{ alert.title }}</td>
+                    <td>{{ alert.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    
+    {% if data.vulnerabilities %}
+    <div class="section">
+        <h2>Vulnerabilities</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Severity</th>
+                    <th>Title</th>
+                    <th>Affected Assets</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vuln in data.vulnerabilities %}
+                <tr>
+                    <td>{{ vuln.id }}</td>
+                    <td class="severity-{{ vuln.severity|lower }}">
+                        {{ vuln.severity }}
+                    </td>
+                    <td>{{ vuln.title }}</td>
+                    <td>{{ vuln.affected_assets|length }}</td>
+                    <td>{{ vuln.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    
+    <div class="footer">
+        <p>Report generated by Cloud Security DB | {{ generated_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}</p>
+    </div>
+</body>
+</html>

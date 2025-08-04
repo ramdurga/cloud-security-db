@@ -1,0 +1,23 @@
+
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: cloud_security_db
+    environment:
+      POSTGRES_DB: cloud_security
+      POSTGRES_USER: security_admin
+      POSTGRES_PASSWORD: securepassword123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U security_admin -d cloud_security"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

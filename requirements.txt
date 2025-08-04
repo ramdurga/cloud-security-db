@@ -1,0 +1,41 @@
+psycopg2-binary>=2.9.10
+python-dotenv>=1.0.0
+anthropic>=0.3.0
+fastapi>=0.100.0
+uvicorn>=0.22.0
+sqlalchemy>=2.0.23
+pydantic>=2.0.0
+httpx>=0.24.0
+# Core Dependencies
+aiofiles>=24.0.0
+langchain>=0.1.0
+langchain-community[sql-query]>=0.0.10
+langchain-anthropic>=0.1.0
+langchain-core>=0.1.0
+langchain-experimental>=0.0.45
+
+# Data Visualization
+plotly>=5.18.0
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# Alerting & Reporting
+aiohttp>=3.9.0
+python-json-logger>=2.0.7
+python-crontab>=3.0.0
+
+# Security Tools Integration
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# PDF & Template Reporting
+jinja2>=3.1.0
+xhtml2pdf>=0.2.15
+
+# Async Database
+asyncpg>=0.28.0
+
+# Email Notifications
+aiosmtplib>=2.0.0
+email-validator>=2.0.0
+pdfkit>=0.6.1
